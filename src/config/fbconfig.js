@@ -13,6 +13,5 @@ var firebaseConfig = {
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
-  firebase.firestore().settings({timestampsInSnapshots: true});
 
   export default firebase;  //entire .js file ( from which we are importing anything )is bundled into the end JS file, when its corresp. import is encountered by webpack. Means, fbconfig.js will be in the bundle whenever firebase will be imported. 

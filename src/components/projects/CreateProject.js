@@ -1,24 +1,28 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import firebase from '../../config/fbconfig';
 
 class CreateProject extends Component {
   state = {
     title: '',
-    content: '',
-    date: null,
-    id: null
+    content: ''
   }
   handleChange = (e) => {
     this.setState({
-      [e.target.id]: e.target.value,
-      date: new Date(),
-      id: Math.random()
+      [e.target.id]: e.target.value
     })
   }
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state);
-    console.log(this.props.addProject);
-    this.props.addProject(this.state);
+    firebase.firestore().collection('projects').add({
+      ...this.state,
+      authorFirstName: 'YO',
+      authorLastName: 'YO',
+    }).then((resp) => {
+      console.log(resp);  
+      //this.props.addProject(this.state); we would not be able to get doc id and store it in state
+      this.props.addProject();
+    });
+
   }
   render() {
     return (
