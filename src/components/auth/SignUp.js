@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 class SignUp extends Component {
     state = {
@@ -18,6 +19,10 @@ class SignUp extends Component {
       console.log(this.state); 
     };
     render() {
+
+      if(this.props.auth) {
+        return <Redirect to='/' />; 
+      } else {
         return (
           <div className="container">
             <form className="white" onSubmit={this.handleSubmit}>
@@ -43,7 +48,8 @@ class SignUp extends Component {
               </div>
             </form>
           </div>
-        )
+        );
+      }
     }
 }
 export default SignUp;

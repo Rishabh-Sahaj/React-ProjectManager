@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'; //importing core functionalities of firebase and not everything about firebase that is needed in development version o firebase (you will see a warning in console about this if you remove      '/app').
 import 'firebase/firestore';
+import 'firebase/auth';
 
 // Your web app's Firebase configuration
 var firebaseConfig = {

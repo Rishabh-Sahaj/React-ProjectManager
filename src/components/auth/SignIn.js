@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import firebase from '../../config/fbconfig';
+import { Redirect } from 'react-router-dom';
 
 class SignIn extends Component {
     state = {
@@ -9,13 +11,32 @@ class SignIn extends Component {
       this.setState({
           [e.target.id]: e.target.value
       });
-      console.log(this.state); 
-    };
+    }
     handleSubmit = (e) => {
-        e.preventDefault();
+      e.preventDefault();
       console.log(this.state); 
-    };
+
+      //user sign in
+      let auth = firebase.auth();
+      auth.signInWithEmailAndPassword(this.state.email,this.state.password).then( (credToken) => {
+        console.log(credToken);
+        console.log(this.props.setAuthenticatedOnState);
+
+        this.props.setAuthenticatedOnState(true);
+
+      }).catch( (err) => {
+        console.log(err.message);
+        
+        this.props.setAuthenticatedOnState(false);
+
+      }); //Async i.e, returns a promise
+    }
     render() {
+
+      if(this.props.auth) {
+        return <Redirect to='/' />; 
+      }
+      else{
         return (
           <div className="container">
             <form className="white" onSubmit={this.handleSubmit}>
@@ -33,7 +54,8 @@ class SignIn extends Component {
               </div>
             </form>
           </div>
-        )
+        );
+      }
     }
 }
 export default SignIn;

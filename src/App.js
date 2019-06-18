@@ -13,61 +13,102 @@ import firebase from './config/fbconfig'; // I tried to put this import in index
 
 //If you think you can take project directly from the create project form to update state of App.js and post to the backend separately then may be it would lead faster update on UI but the state s not synced with backend. It means when refresh the page or close the window and again open the app, then you will not see the previously added projects even though they are present in the database, because the state will be the one as defined in the class not having the previously added projects as it is not synced with the backend / getting its data from backend.     
 
-//NOTE: In App.js get request is present in componentDidMount which is syncing with DB evertime we refresh. If you will remove it then above thing will happen when we update App.js state from createProject state and not from data from DB (which is get through get request).  Also we would want only that data to update the state which would go through some process like authentication and then stored in DB. Plus in our case we want id of projects in the state to be one that is made by firstore as document ID, how will we do that unless we get data and thn update the state with that.
+//NOTE: In App.js get request is present in componentDidMount which is syncing with DB evertime we refresh. If you will remove it then above thing will happen when we update App.js state from createProject state and not from data from DB (which is get through get request).  Also we would want only that data to update the state which would go through some process like authentication and then stored in DB.                                                PLUS in our case we want id of projects in the state to be one that is made by firstore as document ID, how will we do that unless we get data and then update the state with that.
 
 // We would need one Get request after Post to sync (UI) with DB for real-time update in UI OR we could use real-time DB like Firestore has feature of real-tie updates.
 
 class App extends Component {
    state = {
+     authenticated: false,
      projects: []
+   }
+
+   getProjects = () => {
    }
   
    componentDidMount() {
-    const db = firebase.firestore(); 
-    db.collection('projects').get().then((snapshot) => {
-      console.log(snapshot.docs);
+    if(!this.state.authenticated) {
+      this.setState({
+        projects: []
+      });
+    }  //if 
+    else {  
+      const db = firebase.firestore(); 
+
+      //Do error handeling too
+      db.collection('projects').get().then((snapshot) => {//get request( Asyn )
+
+      let newState = [];
+     
       snapshot.docs.forEach( (doc) => { 
-
         let project_title= doc.data().title;
-        let project_content= doc.data().content;
-      
-        this.setState({
-          projects: [...this.state.projects, {title: project_title, content: project_content, date: new Date(), id: doc.id}]
-        });
-        console.log(this.state); 
+        let project_content= doc.data().content;          
+        newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
       });   
-     });  //get request( Asyn )
+
+      console.log(newState); 
+      
+      this.setState({
+        projects: newState
+      });
+
+      });  //then
+    }
+
    }
 
+   setAuthenticatedOnState = (value) => {
+     if(!value){
+      this.setState({
+        authenticated: value,
+        projects: []
+      });
+     } 
+     else {
+        const db = firebase.firestore(); 
 
+        //Do error handeling too
+        db.collection('projects').get().then((snapshot) => {//get request( Asyn )
 
-   addProject = () => {
-    firebase.firestore().collection('projects').get().then((snapshot) => {
+        let newState = [];
       
-      console.log(snapshot.docs);
-        let project_title = snapshot.docs[0].data().title;
-        let project_content = snapshot.docs[0].data().content;
-      
-        this.setState({
-          projects: [...this.state.projects, {title: project_title, content: project_content, date: new Date(), id: snapshot.docs[0].id}]
-        });
-        console.log(this.state); 
+        snapshot.docs.forEach( (doc) => { 
+          let project_title= doc.data().title;
+          let project_content= doc.data().content;          
+          newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+        });   
+
+        console.log(newState); 
         
-     });  //get request( Asyn )
-    // this.componentDidMount();
-   }
+        this.setState({
+          authenticated: value,
+          projects: newState
+        });    
+
+      });  //then
+    }
+  }
+
+  //  addProjects = () => {
+  //   let newState = this.getProjects();
+  //   this.setState({
+  //     projects: newState
+  //   });
+  //  }
+   
 
    render() {
+     console.log(this.state);
 
       return (
         <BrowserRouter>
           <div className="App">
             <Navbar />
-            <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} Projects={this.state.projects} />)}  />
-            <Route path='/signin' component={SignIn} />
-            <Route path='/signup' component={SignUp} />
-            <Route path='/create' render={(routeProps) => (<CreateProject {...routeProps} addProject={this.addProject} />)} />
-            <Route path='/project/:id' component={ProjectDetails} />
+            <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} Projects={this.state.projects} auth={this.state.authenticated} />)}  />
+            <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} auth={this.state.authenticated} setAuthenticatedOnState={this.setAuthenticatedOnState} />)} />
+            <Route path='/signup' render={(routeProps) => (<SignUp {...routeProps} auth={this.state.authenticatedh} setAuthenticatedOnState={this.setAuthenticatedOnState} />)} />
+            <Route path='/create' render={(routeProps) => (<CreateProject {...routeProps} addProject={this.addProjects}  auth={this.state.authenticated} />)} />
+            <Route path='/project/:id' render={(routeProps) => (<ProjectDetails {...routeProps} auth={this.state.authenticated} />)} />
           </div>
         </BrowserRouter>
       );
