@@ -23,6 +23,7 @@ class SignUp extends Component {
       if(this.props.auth) {
         return <Redirect to='/' />; 
       } else {
+        console.log(this.props.auth)
         return (
           <div className="container">
             <form className="white" onSubmit={this.handleSubmit}>

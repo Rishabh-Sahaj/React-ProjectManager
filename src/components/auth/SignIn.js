@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import firebase from '../../config/fbconfig';
+import firebase from '../../config/fbconfig';// I tried to put this import in index.js and use 'firebase' here but it did not work. firebase was undefined in 'firebase.frestore()'.
 import { Redirect } from 'react-router-dom';
 
 class SignIn extends Component {
@@ -19,16 +19,20 @@ class SignIn extends Component {
       //user sign in
       let auth = firebase.auth();
       auth.signInWithEmailAndPassword(this.state.email,this.state.password).then( (credToken) => {
-        console.log(credToken);
-        console.log(this.props.setAuthenticatedOnState);
-
-        this.props.setAuthenticatedOnState(true);
-
+        const db = firebase.firestore(); 
+        //Do error handeling too
+        db.collection('projects').get().then((snapshot) => {//get request( Asyn )
+          let newState = [];        
+          snapshot.docs.forEach( (doc) => { 
+            let project_title= doc.data().title;
+            let project_content= doc.data().content;          
+            newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+          });   
+          console.log(newState);          
+          this.props.setAuthenticatedOnState(true,newState);  
+        });  //then
       }).catch( (err) => {
-        console.log(err.message);
-        
-        this.props.setAuthenticatedOnState(false);
-
+        this.props.setAuthenticatedOnState(false, []);
       }); //Async i.e, returns a promise
     }
     render() {

@@ -1,13 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import firebase from '../../config/fbconfig';
 
-const SignedInLinks = () => {
+const SignedInLinks = (props) => {
+    
+    const handleClick = () => {
+      //user sign in
+      let auth = firebase.auth();
+      auth.signOut().then( () => {
+        props.setAuthenticatedOnState(false, []);
+      });;
+    };
 
     return (
       <div className='signedInLinks right'>
         <ul>
           <li><NavLink to='/create'>New Project</NavLink></li>    
-          <li><NavLink to='/'>Log Out</NavLink></li>    
+          <li><NavLink to='/' onClick={handleClick}>Log Out</NavLink></li>    
           <li><NavLink to='/' className="btn btn-floating pink lighten-1">RD</NavLink></li>    
         </ul>  
       </div>
