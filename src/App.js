@@ -20,7 +20,8 @@ import ProjectDetails from './components/projects/ProjectDetails';
 class App extends Component {
    state = {
      authenticated: false,
-     projects: []
+     projects: [],
+     error: null
    }
 
   
@@ -49,19 +50,23 @@ class App extends Component {
 
   //  }
 
-   setAuthenticatedOnState = (value, projects) => {
+   setAuthenticatedOnState = (value) => {
       this.setState({
-        authenticated: value,
-        projects: projects
+        authenticated: value
       });    
   }
 
-  //  addProjects = () => {
-  //   let newState = this.getProjects();
-  //   this.setState({
-  //     projects: newState
-  //   });
-  //  }
+   setProjectsOnState = (projects) => {
+    this.setState({
+      projects: projects
+    });
+   }
+
+   setErrorOnState = (error) => {
+    this.setState({
+      error: error
+    });
+   }
    
 
    render() {
@@ -71,11 +76,15 @@ class App extends Component {
         <BrowserRouter>
           <div className="App">
             <Navbar setAuthenticatedOnState={this.setAuthenticatedOnState} />
-            <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} Projects={this.state.projects} auth={this.state.authenticated} />)}  />
-            <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} auth={this.state.authenticated} setAuthenticatedOnState={this.setAuthenticatedOnState} />)} />
-            <Route path='/signup' render={(routeProps) => (<SignUp {...routeProps} auth={this.state.authenticated} setAuthenticatedOnState={this.setAuthenticatedOnState} />)} />
-            <Route path='/create' render={(routeProps) => (<CreateProject {...routeProps} addProject={this.addProjects}  auth={this.state.authenticated} />)} />
-            <Route path='/project/:id' render={(routeProps) => (<ProjectDetails {...routeProps} auth={this.state.authenticated} />)} />
+            <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)}  />
+
+            <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)} />
+
+            <Route path='/signup' render={(routeProps) => (<SignUp {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)} />
+
+            <Route path='/create' render={(routeProps) => (<CreateProject {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)} />
+
+            <Route path='/project/:id' render={(routeProps) => (<ProjectDetails {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)} />
           </div>
         </BrowserRouter>
       );

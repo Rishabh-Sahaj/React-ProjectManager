@@ -4,7 +4,9 @@ import { Redirect } from 'react-router-dom';
 const ProjectDetails = (props) => {
     const id = props.match.params.id;
 
-    if(!this.props.auth) {
+    const {authenticated} = props.appState;
+
+    if(!authenticated) {
       return <Redirect to='/signin' />;
     }
     else {

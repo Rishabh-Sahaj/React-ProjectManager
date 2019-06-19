@@ -18,26 +18,33 @@ class SignIn extends Component {
 
       //user sign in
       let auth = firebase.auth();
-      auth.signInWithEmailAndPassword(this.state.email,this.state.password).then( (credToken) => {
+      auth.signInWithEmailAndPassword(this.state.email,this.state.password).then((credToken) => {
+        this.props.setAuthenticatedOnState(true); 
+        
         const db = firebase.firestore(); 
-        //Do error handeling too
-        db.collection('projects').get().then((snapshot) => {//get request( Asyn )
+        db.collection('projects').get().then((snapshot) => {
+
           let newState = [];        
-          snapshot.docs.forEach( (doc) => { 
-            let project_title= doc.data().title;
-            let project_content= doc.data().content;          
-            newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
-          });   
-          console.log(newState);          
-          this.props.setAuthenticatedOnState(true,newState);  
-        });  //then
+            snapshot.docs.forEach( (doc) => { 
+              let project_title= doc.data().title;
+              let project_content= doc.data().content;          
+              newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+            }); //snapshot.docs            
+            this.props.setProjectsOnState(newState);  
+        
+          }).catch((err) => {  
+            this.props.setErrorOnState(err.message);
+          });
+      
       }).catch( (err) => {
-        this.props.setAuthenticatedOnState(false, []);
-      }); //Async i.e, returns a promise
+        this.props.setErrorOnState(err.message);
+      }); //Async 
     }
     render() {
 
-      if(this.props.auth) {
+      const {authenticated} = this.props.appState;
+
+      if(authenticated) {
         return <Redirect to='/' />; 
       }
       else{

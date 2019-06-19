@@ -4,15 +4,17 @@ import { Link } from 'react-router-dom';
 const ProjectList = (props) => {
     
       const getProjectList = () => {
-        if(props.Projects.length !== 0){
-          let projectsList = props.Projects.map( (Project) => {
+        const {projects} = props;
+
+        if(projects.length !== 0){
+          let projectsList = projects.map( (project) => {
             return (
-              <Link to={'project/'+Project.id}>
-                <div className="card z-depth-0 project-summary" key={Project.id}>
+              <Link to={'project/'+project.id}>
+                <div className="card z-depth-0 project-summary" key={project.id}>
                   <div className="card-content grey-text text-darken-3">
-                    <span className="card-title ">{Project.title}</span>
+                    <span className="card-title ">{project.title}</span>
                     <p>Posted by The Net Ninja</p>
-                    <p className="grey-text">{Project.date.toLocaleString()}</p>
+                    <p className="grey-text">{project.date.toLocaleString()}</p>
                   </div>
                 </div>
               </Link>

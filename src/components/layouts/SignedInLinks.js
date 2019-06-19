@@ -9,7 +9,7 @@ const SignedInLinks = (props) => {
       let auth = firebase.auth();
       auth.signOut().then( () => {
         props.setAuthenticatedOnState(false, []);
-      });;
+      });
     };
 
     return (

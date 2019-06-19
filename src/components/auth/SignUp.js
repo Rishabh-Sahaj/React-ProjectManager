@@ -20,7 +20,8 @@ class SignUp extends Component {
     };
     render() {
 
-      if(this.props.auth) {
+      const {authenticated} = this.props.appState;
+      if(authenticated) {
         return <Redirect to='/' />; 
       } else {
         console.log(this.props.auth)
