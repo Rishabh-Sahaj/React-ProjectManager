@@ -14,35 +14,47 @@ class SignIn extends Component {
     }
     handleSubmit = (e) => {
       e.preventDefault();
-      console.log(this.state); 
 
       //user sign in
       let auth = firebase.auth();
       auth.signInWithEmailAndPassword(this.state.email,this.state.password).then((credToken) => {
-        this.props.setAuthenticatedOnState(true); 
-        
-        const db = firebase.firestore(); 
-        db.collection('projects').get().then((snapshot) => {
+        console.log('user has signed in', credToken); 
+  
+        this.props.setAuthenticatedOnState(true); //Note that even if you don't turn it true, at the backend (firebase) user has logged in, i.e, authenticated. This statement is just for the front-end ( as front-end is synced with the state.) ( Firebase authentication states (in the backend offcourse) changes only by firebase auth functions calling,  like signInWithEmailAndPassword(), signout() etc.)
 
-          let newState = [];        
-            snapshot.docs.forEach( (doc) => { 
-              let project_title= doc.data().title;
-              let project_content= doc.data().content;          
-              newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
-            }); //snapshot.docs            
-            this.props.setProjectsOnState(newState);  
+
+
+        //GET THE INITIALS OF SIGNED IN / AUTHENTCATED USER (ASYNC)
+        const db = firebase.firestore(); 
+        db.collection('users').doc(credToken.user.uid).get().then((doc) => {
+          this.props.setInitialsOnState(doc.data().initials);
+        });
         
-          }).catch((err) => {  
-            this.props.setErrorOnState(err.message);
-          });
+
+
+
+        //GET THE PROJECTS (ASYNC)
+        return db.collection('projects').get();// returns a promise
       
-      }).catch( (err) => {
-        this.props.setErrorOnState(err.message);
+      }).then((snapshot) => {
+
+        let newState = [];        
+          snapshot.docs.forEach( (doc) => { 
+            let project_title= doc.data().title;
+            let project_content= doc.data().content;          
+            newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+          }); //snapshot.docs            
+          this.props.setProjectsOnState(newState);  
+      
+      }).catch((err) => {  
+          this.props.setErrorOnState(err.message);
       }); //Async 
     }
+
+
     render() {
 
-      const {authenticated} = this.props.appState;
+      const {authenticated,error} = this.props.appState;
 
       if(authenticated) {
         return <Redirect to='/' />; 
@@ -62,6 +74,9 @@ class SignIn extends Component {
               </div>
               <div className="input-field">
                 <button className="btn pink lighten-1 z-depth-0">Sign in</button>
+                <div className="red-text center">
+                  { error ? <p>{ error }</p> : null }
+                </div>
               </div>
             </form>
           </div>

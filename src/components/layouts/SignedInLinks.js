@@ -7,8 +7,9 @@ const SignedInLinks = (props) => {
     const handleClick = () => {
       //user sign in
       let auth = firebase.auth();
-      auth.signOut().then( () => {
-        props.setAuthenticatedOnState(false, []);
+      auth.signOut().then( (credToken) => {
+        console.log('user has signed out', credToken); //here credToken will be / is undefined, means no response is sent back.
+        props.setAuthenticatedOnState(false);//Note that even if you don't turn it false, at the backend (firebase) user has been logged out, i.e, un-authenticated, and can't be changed back unless signInWithEmailAndPassword() function is called on the user.
       });
     };
 
@@ -17,7 +18,7 @@ const SignedInLinks = (props) => {
         <ul>
           <li><NavLink to='/create'>New Project</NavLink></li>    
           <li><NavLink to='/' onClick={handleClick}>Log Out</NavLink></li>    
-          <li><NavLink to='/' className="btn btn-floating pink lighten-1">RD</NavLink></li>    
+          <li><NavLink to='/' className="btn btn-floating pink lighten-1">{props.appState.initials}</NavLink></li>    
         </ul>  
       </div>
     );

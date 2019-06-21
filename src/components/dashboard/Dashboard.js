@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ProjectList from '../projects/ProjectsList';
 import Notifications from './Notifications';
-import { Redirect } from 'react-router-dom'; // for people who try to access the route manually or through inspecting or by clicking links in the nav which they could display by manuplating the css or js.  
+import { Redirect } from 'react-router-dom'; // For making people see the right routes according to thier authentication status . Also helps when people who try to access the route manually or through inspecting or by clicking links in the nav which they could display by manuplating the css or js.  This is ROUTE GUARDING.
 
 class Dashboard extends Component {
 
