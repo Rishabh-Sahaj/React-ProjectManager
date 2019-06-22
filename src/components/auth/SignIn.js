@@ -42,9 +42,7 @@ class SignIn extends Component {
 
           let newState = [];        
           snapshot.docs.forEach( (doc) => { 
-            let project_title= doc.data().title;
-            let project_content= doc.data().content;          
-            newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+            newState = [...newState , {...doc.data(), id: doc.id}];
           }); //snapshot.docs            
           this.props.setProjectsOnState(newState); //Set Projects On State 
       

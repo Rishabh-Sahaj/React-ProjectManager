@@ -4,22 +4,23 @@ import { Link } from 'react-router-dom';
 const ProjectList = (props) => {
     
       const getProjectList = () => {
-        const {projects, user} = props.appState;
+        const {projects} = props.appState;
 
         if(projects.length !== 0){
           let projectsList = projects.map( (project) => {
+            console.log(project.date.toDate());
             return (
               <Link to={'project/'+project.id}>
                 <div className="card z-depth-0 project-summary" key={project.id}>
                   <div className="card-content grey-text text-darken-3">
                     <span className="card-title ">{project.title}</span>
-                    <p>Posted by {user.firstName + ' ' + user.lastName}</p>
-                    <p className="grey-text">{project.date.toLocaleString()}</p>
+                    <p>Posted by {project.authorFirstName + ' ' + project.authorLastName}</p>
+                    {/* <p className="grey-text">{project.date}</p> */}
                   </div>
                 </div>
               </Link>
             );
-          });
+          });//map
           return projectsList;
         } else {return <div><h4>Loading Projects...</h4></div>}
       };

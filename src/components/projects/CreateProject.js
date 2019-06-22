@@ -18,7 +18,8 @@ class CreateProject extends Component {
       ...this.state,
       authorFirstName: this.props.appState.user.firstName,
       authorLastName: this.props.appState.user.lastName,
-      authorID: this.props.appState.user.userID
+      authorID: this.props.appState.user.userID,
+      date: new Date()
     }).then((resp) => {
       console.log(resp);  
       //this.props.addProject(this.state); we would not be able to get doc id and store it in state so we need get request.
@@ -28,10 +29,8 @@ class CreateProject extends Component {
     }).then((snapshot) => {//get request( Asyn )
         
         let newState = [];        
-        snapshot.docs.forEach( (doc) => { 
-          let project_title= doc.data().title;
-          let project_content= doc.data().content;          
-          newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+        snapshot.docs.forEach( (doc) => {          
+          newState = [...newState , {...doc.data(), id: doc.id}];
         });   
         console.log(newState);
         this.props.setProjectsOnState(newState);
