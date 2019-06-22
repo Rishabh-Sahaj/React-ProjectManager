@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const ProjectList = (props) => {
     
       const getProjectList = () => {
-        const {projects} = props;
+        const {projects, user} = props.appState;
 
         if(projects.length !== 0){
           let projectsList = projects.map( (project) => {
@@ -13,7 +13,7 @@ const ProjectList = (props) => {
                 <div className="card z-depth-0 project-summary" key={project.id}>
                   <div className="card-content grey-text text-darken-3">
                     <span className="card-title ">{project.title}</span>
-                    <p>Posted by The Net Ninja</p>
+                    <p>Posted by {user.firstName + ' ' + user.lastName}</p>
                     <p className="grey-text">{project.date.toLocaleString()}</p>
                   </div>
                 </div>

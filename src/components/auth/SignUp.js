@@ -23,11 +23,11 @@ class SignUp extends Component {
         // firebase.firestore().collection('user') //createsa collection named 'user' if it doesn't exist
         // .doc()
         console.log('user has signed up', credToken); 
-        this.props.setAuthenticatedOnState(true); //showing things in UI that Authenticated user should see.
+        this.props.setAuthenticatedOnState(true); //Set Authenticated On State
     
 
         
-        // ADD USER (ASYNC) ( O N L Y   T H I S   I S   D I F F E R E N T   F R O M   S I G N I N   O N E )
+    // FIRESTORE USER ADD (ASYNC) ( O N L Y   T H I S   I S   D I F F E R E N T   F R O M   S I G N I N   O N E )
         firebase.firestore().collection('users') //It will make the collection named 'users' if it doesn't exist.
         .doc(credToken.user.uid) // It is alternative of add() where document id is generated automatically in the backend, but in doc() id is given in the request / query itself. We want ID of user (uid) in firebase auth and document id of the corresp. user in firestore be the same. We are making that corresp. doc in firestore to store First and last Name. Firebase Auth saves Email, UID etc. only which you can find in credToken.
         .set({
@@ -37,16 +37,16 @@ class SignUp extends Component {
         }).then((resp) => {
           console.log('new user has been added', resp);
         }).catch((err) => {  
-          this.props.setErrorOnState(err.message);        
+          this.props.setErrorOnState(err.message); //Set Error On State       
         });
-        // END ADD USER
+        // END FIRESTORE USER ADD
 
 
 
-        //GET THE INITIALS OF SIGNED IN / AUTHENTCATED USER (ASYNC)
+        //GET THE USER INFO. OF SIGNED IN / AUTHENTCATED USER (ASYNC)
         const db = firebase.firestore(); 
         db.collection('users').doc(credToken.user.uid).get().then((doc) => {
-          this.props.setInitialsOnState(doc.data().initials);
+          this.props.setUserOnState(doc.data()); // Set User On State
         });
 
 
@@ -63,10 +63,10 @@ class SignUp extends Component {
             let project_content= doc.data().content;          
             newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
           }); //snapshot.docs            
-          this.props.setProjectsOnState(newState);  
+          this.props.setProjectsOnState(newState); //Set Projects On State 
       
       }).catch((err) => {  
-          this.props.setErrorOnState(err.message);
+          this.props.setErrorOnState(err.message);//Set Error On State
       }); //Async                                      
             
     }

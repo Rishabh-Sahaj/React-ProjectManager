@@ -20,15 +20,17 @@ class SignIn extends Component {
       auth.signInWithEmailAndPassword(this.state.email,this.state.password).then((credToken) => {
         console.log('user has signed in', credToken); 
   
-        this.props.setAuthenticatedOnState(true); //Note that even if you don't turn it true, at the backend (firebase) user has logged in, i.e, authenticated. This statement is just for the front-end ( as front-end is synced with the state.) ( Firebase authentication states (in the backend offcourse) changes only by firebase auth functions calling,  like signInWithEmailAndPassword(), signout() etc.)
+        this.props.setAuthenticatedOnState(true); //Set Authenticated On State
+         //Note that even if you don't turn it true, at the backend (firebase) user has logged in, i.e, authenticated. This statement is just for the front-end ( as front-end is synced with the state.) ( Firebase authentication states (in the backend offcourse) changes only by firebase auth functions calling,  like signInWithEmailAndPassword(), signout() etc.)
 
 
 
-        //GET THE INITIALS OF SIGNED IN / AUTHENTCATED USER (ASYNC)
-        const db = firebase.firestore(); 
-        db.collection('users').doc(credToken.user.uid).get().then((doc) => {
-          this.props.setInitialsOnState(doc.data().initials);
-        });
+         //GET THE USER INFO. OF SIGNED IN / AUTHENTCATED USER (ASYNC)
+         const db = firebase.firestore(); 
+         db.collection('users').doc(credToken.user.uid).get().then((doc) => {
+           console.log(doc);
+           this.props.setUserOnState(doc.data(), doc.id); //Set User On State
+         });
         
 
 
@@ -38,16 +40,16 @@ class SignIn extends Component {
       
       }).then((snapshot) => {
 
-        let newState = [];        
+          let newState = [];        
           snapshot.docs.forEach( (doc) => { 
             let project_title= doc.data().title;
             let project_content= doc.data().content;          
             newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
           }); //snapshot.docs            
-          this.props.setProjectsOnState(newState);  
+          this.props.setProjectsOnState(newState); //Set Projects On State 
       
       }).catch((err) => {  
-          this.props.setErrorOnState(err.message);
+          this.props.setErrorOnState(err.message); //Set Error On State
       }); //Async 
     }
 

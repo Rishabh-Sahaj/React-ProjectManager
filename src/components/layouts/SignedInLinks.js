@@ -18,7 +18,7 @@ const SignedInLinks = (props) => {
         <ul>
           <li><NavLink to='/create'>New Project</NavLink></li>    
           <li><NavLink to='/' onClick={handleClick}>Log Out</NavLink></li>    
-          <li><NavLink to='/' className="btn btn-floating pink lighten-1">{props.appState.initials}</NavLink></li>    
+          <li><NavLink to='/' className="btn btn-floating pink lighten-1">{props.appState.user.initials}</NavLink></li>    
         </ul>  
       </div>
     );

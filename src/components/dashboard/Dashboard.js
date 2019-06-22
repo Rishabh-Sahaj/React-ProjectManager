@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'; // For making people see the right 
 class Dashboard extends Component {
 
     render() {
-        const {authenticated,projects} = this.props.appState;
+        const {authenticated} = this.props.appState;
 
         if(!authenticated) {
           return <Redirect to='/signin' />;// for people who try to access the route manually or through inspecting or by clicking links in the nav which they could display by manuplating the css or js.  
@@ -17,7 +17,7 @@ class Dashboard extends Component {
               <div className="row">
                 
                 <div className="col s12 m6">
-                  <ProjectList projects={projects}/>  
+                  <ProjectList appState={this.props.appState}/>  
                 </div>
                 <div className="col s12 m5 offset-m1">
                   <Notifications />  

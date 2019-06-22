@@ -21,35 +21,9 @@ class App extends Component {
    state = {
      authenticated: false,
      projects: [],
-     initials: '',
+     user: {},
      error: null
    }
-
-  
-  //  componentDidMount() {
-  //   if(!this.state.authenticated) {
-  //     this.setState({
-  //       projects: []
-  //     });
-  //   }  //if 
-  //   else {  
-  //     const db = firebase.firestore(); 
-  //     //Do error handeling too
-  //     db.collection('projects').get().then((snapshot) => {//get request( Asyn )
-  //       let newState = [];     
-  //       snapshot.docs.forEach( (doc) => { 
-  //         let project_title= doc.data().title;
-  //         let project_content= doc.data().content;          
-  //         newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
-  //       });   
-  //       console.log(newState);      
-  //       this.setState({
-  //         projects: newState
-  //       });
-  //     });  
-  //   }
-
-  //  }
 
    setAuthenticatedOnState = (value) => {
       this.setState({
@@ -63,9 +37,9 @@ class App extends Component {
     });
    }
 
-   setInitialsOnState = (initials) => {
+   setUserOnState = (user,id) => {
     this.setState({
-      initials: initials
+      user:{...user, userID: id}
     });
    }
 
@@ -85,9 +59,9 @@ class App extends Component {
             <Navbar setAuthenticatedOnState={this.setAuthenticatedOnState} appState={this.state} />
             <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} appState={this.state}   setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)}  />
 
-            <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} setInitialsOnState={this.setInitialsOnState} />)} />
+            <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} setUserOnState={this.setUserOnState} />)} />
 
-            <Route path='/signup' render={(routeProps) => (<SignUp {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} setInitialsOnState={this.setInitialsOnState} />)} />
+            <Route path='/signup' render={(routeProps) => (<SignUp {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} setUserOnState={this.setUserOnState} />)} />
 
             <Route path='/create' render={(routeProps) => (<CreateProject {...routeProps} appState={this.state} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)} />
 
@@ -99,3 +73,6 @@ class App extends Component {
 }
 
 export default App;
+
+
+// I M P O R T A N T                                                                                                 ------------------- If we don't sync authenticated value of App.js state with FIREBASE AUTH STATUS (which doesn't change even after refreshing the page or reopening the page after closing ), then authenticated value will be false for athenticated people after refreshing or reopening the page, means they will see sign in or sign up page only but still could priviledge all facilities of authentication like getting / reading projects from backend or Create / Post New Projects to the Backend, if they somehow send the request to backend / firebase. 

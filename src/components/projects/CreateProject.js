@@ -16,27 +16,35 @@ class CreateProject extends Component {
     e.preventDefault();
     firebase.firestore().collection('projects').add({
       ...this.state,
-      authorFirstName: 'YO',
-      authorLastName: 'YO',
+      authorFirstName: this.props.appState.user.firstName,
+      authorLastName: this.props.appState.user.lastName,
+      authorID: this.props.appState.user.userID
     }).then((resp) => {
       console.log(resp);  
       //this.props.addProject(this.state); we would not be able to get doc id and store it in state so we need get request.
-
         const db = firebase.firestore(); 
-        //Do error handeling too
-        db.collection('projects').get().then((snapshot) => {//get request( Asyn )
-          let newState = [];        
-          snapshot.docs.forEach( (doc) => { 
-            let project_title= doc.data().title;
-            let project_content= doc.data().content;          
-            newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
-          });   
-          console.log(newState);
-        this.props.setProjectsOnState(newState);
-      });
+        return db.collection('projects').get();
 
+    }).then((snapshot) => {//get request( Asyn )
+        
+        let newState = [];        
+        snapshot.docs.forEach( (doc) => { 
+          let project_title= doc.data().title;
+          let project_content= doc.data().content;          
+          newState = [...newState , {title: project_title, content: project_content, date: new Date(), id: doc.id}];
+        });   
+        console.log(newState);
+        this.props.setProjectsOnState(newState);
+
+
+
+        this.props.history.push('/'); //after everything has gone successfull we redirect to dashboard
+
+    }).catch((err) => {  
+      this.props.setErrorOnState(err.message);
     });
- }
+  }
+
   render() {
     const {authenticated,error} = this.props.appState;
 
