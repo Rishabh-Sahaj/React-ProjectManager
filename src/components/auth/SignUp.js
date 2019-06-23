@@ -46,7 +46,7 @@ class SignUp extends Component {
         //GET THE USER INFO. OF SIGNED IN / AUTHENTCATED USER (ASYNC)
         const db = firebase.firestore(); 
         db.collection('users').doc(credToken.user.uid).get().then((doc) => {
-          this.props.setUserOnState(doc.data()); // Set User On State
+          this.props.setUserOnState(doc.data(), doc.id); // Set User On State
         });
 
 
@@ -78,7 +78,6 @@ class SignUp extends Component {
       if(authenticated) {
         return <Redirect to='/' />; 
       } else {
-        console.log(this.props.auth)
         return (
           <div className="container">
             <form className="white" onSubmit={this.handleSubmit}>

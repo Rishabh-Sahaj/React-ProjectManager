@@ -10,6 +10,7 @@ const SignedInLinks = (props) => {
       auth.signOut().then( (credToken) => {
         console.log('user has signed out', credToken); //here credToken will be / is undefined, means no response is sent back.
         props.setAuthenticatedOnState(false);//Note that even if you don't turn it false, at the backend (firebase) user has been logged out, i.e, un-authenticated, and can't be changed back unless signInWithEmailAndPassword() function is called on the user.
+        props.setErrorOnState(null);
       });
     };
 

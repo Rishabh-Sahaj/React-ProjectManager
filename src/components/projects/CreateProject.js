@@ -45,7 +45,7 @@ class CreateProject extends Component {
   }
 
   render() {
-    const {authenticated,error} = this.props.appState;
+    const {authenticated} = this.props.appState;
 
     if(!authenticated) {
       return <Redirect to='/signin' />;
@@ -65,9 +65,9 @@ class CreateProject extends Component {
             </div>
             <div className="input-field">
               <button className="btn pink lighten-1">Create</button>
-                <div className="red-text center">
+                {/* <div className="red-text center">
                   { error ? <p>{ error }</p> : null }
-                </div>
+                </div> */}
             </div>
           </form>
         </div>

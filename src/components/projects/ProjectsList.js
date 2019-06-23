@@ -10,8 +10,8 @@ const ProjectList = (props) => {
           let projectsList = projects.map( (project) => {
             console.log(project.date.toDate());
             return (
-              <Link to={'project/'+project.id}>
-                <div className="card z-depth-0 project-summary" key={project.id}>
+              <Link to={'project/'+project.id} key={project.id}>
+                <div className="card z-depth-0 project-summary">
                   <div className="card-content grey-text text-darken-3">
                     <span className="card-title ">{project.title}</span>
                     <p>Posted by {project.authorFirstName + ' ' + project.authorLastName}</p>

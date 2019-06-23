@@ -5,7 +5,7 @@ import SignedOutLinks from './SignedOutLinks';
 
 const Navbar = (props) => {
 
-    const links = props.appState.authenticated ? <SignedInLinks setAuthenticatedOnState={props.setAuthenticatedOnState} appState={props.appState} /> : <SignedOutLinks />;
+    const links = props.appState.authenticated ? <SignedInLinks setAuthenticatedOnState={props.setAuthenticatedOnState} setErrorOnState={props.setErrorOnState} appState={props.appState} /> : <SignedOutLinks />;
     return (
       <nav className='nav-wrapper grey darken-3'>
         <div className='container'>

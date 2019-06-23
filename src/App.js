@@ -56,7 +56,7 @@ class App extends Component {
       return (
         <BrowserRouter>
           <div className="App">
-            <Navbar setAuthenticatedOnState={this.setAuthenticatedOnState} appState={this.state} />
+            <Navbar setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} appState={this.state} />
             <Route exact path='/' render={(routeProps) => (<Dashboard {...routeProps} appState={this.state}   setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} />)}  />
 
             <Route path='/signin' render={(routeProps) => (<SignIn {...routeProps} appState={this.state} setAuthenticatedOnState={this.setAuthenticatedOnState} setErrorOnState={this.setErrorOnState} setProjectsOnState={this.setProjectsOnState} setUserOnState={this.setUserOnState} />)} />
